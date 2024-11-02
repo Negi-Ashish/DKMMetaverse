@@ -39,16 +39,22 @@ export default class Physics {
           dimensions.y / 2,
           dimensions.z / 2
         );
-        this.world.createCollider(colliderType, this.rigidBody);
+
         break;
       case "ball":
         const radius = this.computeBallDimensions(mesh);
         colliderType = this.rapier.ColliderDesc.ball(radius);
-        this.world.createCollider(colliderType, this.rigidBody);
+
         break;
       case "trimesh":
+        const { scaledVertices, indices } = this.computeTrimeshDimensions(mesh);
+        colliderType = this.rapier.ColliderDesc.trimesh(
+          scaledVertices,
+          indices
+        );
         break;
     }
+    this.world.createCollider(colliderType, this.rigidBody);
 
     // Setting the rigidbody position and rotation
     const worldPosition = mesh.getWorldPosition(new THREE.Vector3());
@@ -77,6 +83,26 @@ export default class Physics {
     const worldScale = mesh.getWorldScale(new THREE.Vector3());
     const maxScale = Math.max(worldScale.x, worldScale.y, worldScale.z);
     return radius * maxScale;
+  }
+
+  computeTrimeshDimensions(mesh) {
+    const vertices = mesh.geometry.attributes.position.array;
+    const indices = mesh.geometry.index.array;
+    const worldScale = mesh.getWorldScale(new THREE.Vector3());
+
+    // const scaledVertices = [];
+
+    // for (let i = 0; i < vertices.length; i += 3) {
+    //   scaledVertices.push(vertices[i] * worldScale.x);
+    //   scaledVertices.push(vertices[i + 1] * worldScale.y);
+    //   scaledVertices.push(vertices[i + 2] * worldScale.z);
+    // }
+
+    const scaledVertices = vertices.map((vertex, index) => {
+      return vertex * worldScale.getComponent(index % 3);
+    });
+
+    return { scaledVertices, indices };
   }
 
   loop() {
