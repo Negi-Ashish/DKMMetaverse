@@ -32,8 +32,26 @@ export default class Environment {
     this.cubeMesh.position.y = 10;
     this.cubeMesh.rotation.x = 1;
     this.cubeMesh.rotation.z = 1;
-    this.scene.add(this.cubeMesh);
+    // this.scene.add(this.cubeMesh);
 
+    // another mesh to test group
+    const material2 = new THREE.MeshStandardMaterial({ color: "green" });
+    this.cubeMesh2 = new THREE.Mesh(geomentry, material2);
+    this.cubeMesh2.position.y = 15;
+    this.cubeMesh2.rotation.x = 2;
+    this.cubeMesh2.rotation.z = 2;
+    this.cubeMesh2.scale.set(2, 2, 2);
+    // this.scene.add(this.cubeMesh2);
+
+    // dealing with group
+    const group = new THREE.Group();
+    group.add(this.cubeMesh, this.cubeMesh2);
+    group.position.y = 10;
+    group.rotation.x = 0.5;
+    this.scene.add(group);
+
+    // Apply physics to the meshes
     this.physics.add(this.cubeMesh);
+    this.physics.add(this.cubeMesh2);
   }
 }
