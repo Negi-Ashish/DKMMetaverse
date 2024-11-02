@@ -26,7 +26,8 @@ export default class Environment {
 
   addMeshes() {
     // Create ThreeJS Mesh
-    const geomentry = new THREE.BoxGeometry(1, 1, 1);
+    // const geomentry = new THREE.BoxGeometry(1, 1, 1);
+    const geomentry = new THREE.SphereGeometry(1, 32, 32);
     const material = new THREE.MeshStandardMaterial({ color: "orange" });
     this.cubeMesh = new THREE.Mesh(geomentry, material);
     this.cubeMesh.position.y = 10;
@@ -51,7 +52,13 @@ export default class Environment {
     this.scene.add(group);
 
     // Apply physics to the meshes
-    this.physics.add(this.cubeMesh);
-    this.physics.add(this.cubeMesh2);
+    this.physics.add(this.cubeMesh, "dynamic", "ball");
+    this.physics.add(this.cubeMesh2, "dynamic", "ball");
+
+    const groundGeometry = new THREE.BoxGeometry(50, 1, 50);
+    const groundMaterial = new THREE.MeshStandardMaterial({ color: "red" });
+    this.groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+    this.scene.add(this.groundMesh);
+    this.physics.add(this.groundMesh, "fixed", "cuboid");
   }
 }
