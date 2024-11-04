@@ -7,6 +7,7 @@ export default class Character {
   constructor() {
     this.app = new App();
     this.scene = this.app.scene;
+    this.physics = this.app.world.physics;
 
     inputStore.subscribe((state) => {
       this.forward = state.forward;
@@ -24,23 +25,32 @@ export default class Character {
     this.character = new THREE.Mesh(geometry, material);
     this.character.position.set(0, 2.5, 0);
     this.scene.add(this.character);
+    this.characterRigidBody = this.physics.add(
+      this.character,
+      "kinematicPosition",
+      "cuboid"
+    );
   }
 
   loop() {
+    let { x, y, z } = this.characterRigidBody.translation();
+
     if (this.forward) {
-      this.character.position.z -= 0.1;
+      z = z - 0.1;
     }
 
     if (this.backward) {
-      this.character.position.z += 0.1;
+      z = z + 0.1;
     }
 
     if (this.left) {
-      this.character.position.x -= 0.1;
+      x = x - 0.1;
     }
 
     if (this.right) {
-      this.character.position.x += 0.1;
+      x = x + 0.1;
     }
+
+    this.characterRigidBody.setNextKinematicTranslation({ x, y, z });
   }
 }

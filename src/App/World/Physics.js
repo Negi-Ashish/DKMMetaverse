@@ -22,11 +22,22 @@ export default class Physics {
   add(mesh, type, collider) {
     // Define Rigid Body
     let rigidBodyType;
-    if (type == "dynamic") {
-      rigidBodyType = this.rapier.RigidBodyDesc.dynamic();
-    } else if (type == "fixed") {
-      rigidBodyType = this.rapier.RigidBodyDesc.fixed();
+
+    switch (type) {
+      case "dynamic":
+        rigidBodyType = this.rapier.RigidBodyDesc.dynamic();
+        break;
+      case "fixed":
+        rigidBodyType = this.rapier.RigidBodyDesc.fixed();
+        break;
+      case "kinematic":
+        rigidBodyType = this.rapier.RigidBodyDesc.kinematicVelocityBased();
+        break;
+      case "kinematicPosition":
+        rigidBodyType = this.rapier.RigidBodyDesc.kinematicPositionBased();
+        break;
     }
+
     this.rigidBody = this.world.createRigidBody(rigidBodyType);
 
     // Define Collider Type
@@ -63,6 +74,8 @@ export default class Physics {
     this.rigidBody.setRotation(worldRotation);
 
     this.meshMap.set(mesh, this.rigidBody);
+
+    return this.rigidBody;
   }
 
   // mesh.geometry.boundingBox is initially null until you run the computeBoundingBox() function.
