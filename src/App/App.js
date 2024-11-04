@@ -6,6 +6,7 @@ import World from "./World/World";
 import Resize from "./Utils/Resize";
 import AssetLoader from "./Utils/AssetLoader";
 import Preloader from "./UI/Preloader";
+import InputController from "./UI/InputController";
 
 let instance = null;
 export default class App {
@@ -21,6 +22,7 @@ export default class App {
     // Load Assets
     this.assetLoader = new AssetLoader();
     this.preLoader = new Preloader();
+    this.InputController = new InputController();
 
     // World
     this.world = new World();
