@@ -20,37 +20,69 @@ export default class Character {
   }
 
   instantiateCharacter() {
+    // Create a character in ThreeJS
     const geometry = new THREE.BoxGeometry(2, 2, 2);
-    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x00ff00,
+      wireframe: true,
+    });
     this.character = new THREE.Mesh(geometry, material);
     this.character.position.set(0, 2.5, 0);
     this.scene.add(this.character);
-    this.characterRigidBody = this.physics.add(
-      this.character,
-      "kinematicPosition",
-      "cuboid"
+
+    // create a rigid body
+    this.rigidBodyType =
+      this.physics.rapier.RigidBodyDesc.kinematicPositionBased();
+    this.rigidBody = this.physics.world.createRigidBody(this.rigidBodyType);
+
+    // create a collider
+    this.colliderType = this.physics.rapier.ColliderDesc.cuboid(1, 1, 1);
+    this.collider = this.physics.world.createCollider(
+      this.colliderType,
+      this.rigidBody
     );
+
+    // set rigid body position to character position
+    const worldPosition = this.character.getWorldPosition(new THREE.Vector3());
+    const worldRotation = this.character.getWorldQuaternion(
+      new THREE.Quaternion()
+    );
+    this.rigidBody.setTranslation(worldPosition);
+    this.rigidBody.setRotation(worldRotation);
+
+    this.characterController =
+      this.physics.world.createCharacterController(0.01);
   }
 
-  loop() {
-    let { x, y, z } = this.characterRigidBody.translation();
+  loop(deltaTime) {
+    const movement = new THREE.Vector3();
 
     if (this.forward) {
-      z = z - 0.1;
+      movement.z -= 1;
     }
-
     if (this.backward) {
-      z = z + 0.1;
+      movement.z += 1;
     }
-
     if (this.left) {
-      x = x - 0.1;
+      movement.x -= 1;
     }
-
     if (this.right) {
-      x = x + 0.1;
+      movement.x += 1;
     }
 
-    this.characterRigidBody.setNextKinematicTranslation({ x, y, z });
+    movement.normalize().multiplyScalar(deltaTime * 30);
+    movement.y = -1;
+    this.characterController.computeColliderMovement(this.collider, movement);
+    this.characterController.setApplyImpulsesToDynamicBodies(true);
+    this.characterController.enableAutostep(3, 0.1, true);
+    this.characterController.enableSnapToGround(1);
+
+    const newPosition = new THREE.Vector3()
+      .copy(this.rigidBody.translation())
+      .add(this.characterController.computedMovement());
+
+    this.rigidBody.setNextKinematicTranslation(newPosition);
+
+    this.character.position.copy(this.rigidBody.translation());
   }
 }
