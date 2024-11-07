@@ -14,7 +14,7 @@ export default class Camera {
     this.sizes = this.sizesStore.getState();
 
     this.setInstance();
-    // this.setControls();
+    this.setControls();
     this.setResizeListner();
   }
 
@@ -47,13 +47,31 @@ export default class Camera {
 
   // This will be called in the renderer loop class
   loop() {
+    this.controls.update();
+
     // Checking if the charcater is ready, i.e. Physics is ready and character is loaded.
     this.character = this.app.world.character?.rigidBody;
     if (this.character) {
-      this.instance.position.copy(this.character.translation());
+      const characterRotation = this.character.rotation();
+      const characterPosition = this.character.translation();
+
+      const cameraOffset = new THREE.Vector3(0, 30, 55);
+      cameraOffset.applyQuaternion(characterRotation);
+      cameraOffset.add(characterPosition);
+
+      const targetOffset = new THREE.Vector3(0, 10, 0);
+      targetOffset.applyQuaternion(characterRotation);
+      targetOffset.add(characterPosition);
+
+      // Play with this properties to deal with how fast does camera roatates and come back to original position
+      // And How fast with the camera follow the character.
+      this.instance.position.lerp(cameraOffset, 0.05);
+      this.controls.target.lerp(targetOffset, 0.1);
+
+      // Commented function is a look at function for a camera
+      // this.instance.lookAt(camerLookat);
     }
 
-    // this.controls.update();
     // console.log("Camera loop called");
   }
 }
