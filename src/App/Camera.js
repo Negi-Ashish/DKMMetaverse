@@ -14,7 +14,7 @@ export default class Camera {
     this.sizes = this.sizesStore.getState();
 
     this.setInstance();
-    this.setControls();
+    // this.setControls();
     this.setResizeListner();
   }
 
@@ -47,7 +47,13 @@ export default class Camera {
 
   // This will be called in the renderer loop class
   loop() {
-    this.controls.update();
+    // Checking if the charcater is ready, i.e. Physics is ready and character is loaded.
+    this.character = this.app.world.character?.rigidBody;
+    if (this.character) {
+      this.instance.position.copy(this.character.translation());
+    }
+
+    // this.controls.update();
     // console.log("Camera loop called");
   }
 }
