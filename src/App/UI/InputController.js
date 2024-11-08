@@ -37,6 +37,12 @@ export default class InputController {
       case "ArrowRight":
         inputStore.setState({ right: true });
         break;
+      case "KeyZ":
+        inputStore.setState({ hiphop: true });
+        break;
+      case "KeyX":
+        inputStore.setState({ windmill: true });
+        break;
     }
     this.keyPressed[event.code] = true;
   }
@@ -58,6 +64,12 @@ export default class InputController {
       case "KeyD":
       case "ArrowRight":
         inputStore.setState({ right: false });
+        break;
+      case "KeyZ":
+        inputStore.setState({ hiphop: false });
+        break;
+      case "KeyX":
+        inputStore.setState({ windmill: false });
         break;
     }
     this.keyPressed[event.code] = false;

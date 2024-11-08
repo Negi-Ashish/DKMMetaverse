@@ -23,6 +23,8 @@ export default class CharacterController {
       this.backward = state.backward;
       this.left = state.left;
       this.right = state.right;
+      this.hiphop = state.hiphop;
+      this.windmill = state.windmill;
     });
 
     // Instantiate controller and create rigid body and collider
@@ -67,6 +69,9 @@ export default class CharacterController {
   loop() {
     // Initialize movement vector based on input values
     const movement = new THREE.Vector3();
+
+    if (this.hiphop || this.windmill) return;
+
     if (this.forward) {
       movement.z -= 1;
     }

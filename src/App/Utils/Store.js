@@ -16,4 +16,6 @@ export const inputStore = createStore(() => ({
   backward: false,
   left: false,
   right: false,
+  hiphop: false,
+  windmill: false,
 }));
