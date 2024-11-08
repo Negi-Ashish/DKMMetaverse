@@ -1,4 +1,5 @@
 import assetStore from "../Utils/AssetStore";
+import { appStateStore } from "../Utils/Store";
 
 export default class Preloader {
   constructor() {
@@ -21,6 +22,7 @@ export default class Preloader {
       );
 
       if (this.progress === 1) {
+        appStateStore.setState({ assetsReady: true });
         this.loading.classList.add("fade");
         window.setTimeout(() => this.ready(), 1200);
       }

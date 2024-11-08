@@ -7,7 +7,6 @@ import assetStore from "./AssetStore.js";
 export default class AssetLoader {
   constructor() {
     this.assetStore = assetStore.getState();
-    console.log(this.assetStore);
     this.assetsToLoad = this.assetStore.assetsToLoad;
     this.addLoadedAsset = this.assetStore.addLoadedAsset;
 
