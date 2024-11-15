@@ -6,6 +6,11 @@ const assetsToLoad = [
     path: "/models/avatar.glb",
     type: "model",
   },
+  {
+    id: "environment",
+    path: "/models/metaverseedited5.glb",
+    type: "model",
+  },
 ];
 
 // addLoad function is just adding assets to loadedAssets object once they are loaded

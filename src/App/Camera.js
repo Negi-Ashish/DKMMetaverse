@@ -15,7 +15,7 @@ export default class Camera {
 
     this.setInstance();
     this.setControls();
-    this.setResizeListner();
+    this.setResizeLister();
   }
 
   setInstance() {
@@ -34,7 +34,7 @@ export default class Camera {
     this.controls.enableDamping = true;
   }
 
-  setResizeListner() {
+  setResizeLister() {
     this.sizesStore.subscribe((sizes) => {
       this.instance.aspect = sizes.width / sizes.height;
       this.instance.updateProjectionMatrix();
@@ -45,14 +45,14 @@ export default class Camera {
     this.controls.update();
     this.characterController = this.app.world.characterController?.rigidBody;
     if (this.characterController) {
-      const characterRotation = this.characterController.rotation();
       const characterPosition = this.characterController.translation();
+      const characterRotation = this.characterController.rotation();
 
-      const cameraOffset = new THREE.Vector3(0, 5, 20);
+      const cameraOffset = new THREE.Vector3(0, 28, 35);
       cameraOffset.applyQuaternion(characterRotation);
       cameraOffset.add(characterPosition);
 
-      const targetOffset = new THREE.Vector3(0, 2, 0);
+      const targetOffset = new THREE.Vector3(0, 8, 0);
       targetOffset.applyQuaternion(characterRotation);
       targetOffset.add(characterPosition);
 
